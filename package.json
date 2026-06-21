@@ -1,0 +1,28 @@
+{
+  "name": "terratrack-carbon-footprint",
+  "version": "1.0.0",
+  "description": "Secure Full-Stack Carbon Footprint Tracker with Gemini AI Diagnosis and Chatbot Assistant",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "carbon-footprint",
+    "tracker",
+    "green-living",
+    "gemini-ai",
+    "full-stack"
+  ],
+  "author": "TerraTrack Team",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.13.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

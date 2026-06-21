@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerraTrack | Personal Carbon Footprint Tracker</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. loading screen -->
+    <div id="loader-screen" class="loader-screen">
+        <div class="loader-content">
+            <div class="loader-leaf-container">
+                <i data-lucide="leaf" class="loader-leaf"></i>
+                <div class="loader-ring"></div>
+            </div>
+            <div class="loader-text-container">
+                <h1 class="loader-logo">TerraTrack</h1>
+                <p class="loader-subtitle">Measuring your ecological footprint...</p>
+                <div class="loader-progress-bar-bg">
+                    <div id="loader-progress-fill" class="loader-progress-fill"></div>
+                </div>
+                <div class="loader-percentage"><span id="loader-percentage-num">0</span>%</div>
+            </div>
+            <div class="loader-tip" id="loader-tip">"Every small step makes a big difference."</div>
+        </div>
+    </div>
+
+    <!-- Main App Container (Hidden initially) -->
+    <div id="app-container" class="app-container hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-logo">
+                <div class="logo-icon">
+                    <i data-lucide="leaf"></i>
+                </div>
+                <div class="logo-text">
+                    <h2>TerraTrack</h2>
+                    <span>Green Living Hub</span>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <!-- User Profile / Auth Button -->
+                <div id="user-menu-container" class="user-menu-container">
+                    <!-- Guest View -->
+                    <div id="guest-header-btn" class="guest-header-btn hidden">
+                        <button class="btn btn-outline" id="header-login-btn">Sign In</button>
+                    </div>
+                    <!-- Authenticated View -->
+                    <div id="auth-header-btn" class="auth-header-btn hidden">
+                        <div class="profile-pill" id="profile-dropdown-trigger">
+                            <div class="avatar" id="user-avatar-initial">U</div>
+                            <span class="username" id="header-username">User</span>
+                            <i data-lucide="chevron-down" class="chevron"></i>
+                        </div>
+                        <div class="profile-dropdown" id="profile-dropdown-menu">
+                            <div class="dropdown-header">
+                                <p class="dropdown-name" id="dropdown-username">User Name</p>
+                                <p class="dropdown-email" id="dropdown-email">user@example.com</p>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item" id="menu-edit-profile">
+                                <i data-lucide="settings"></i> Edit Profile & Quiz
+                            </a>
+                            <a href="#" class="dropdown-item" id="menu-view-dashboard">
+                                <i data-lucide="layout-dashboard"></i> Dashboard
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item logout-item" id="menu-logout">
+                                <i data-lucide="log-out"></i> Sign Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Body -->
+        <main class="app-content">
+
+            <!-- 2. AUTHENTICATION SECTION -->
+            <section id="auth-section" class="content-section hidden">
+                <div class="auth-card">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" id="tab-login-btn">Sign In</button>
+                        <button class="auth-tab" id="tab-signup-btn">Create Account</button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <form id="login-form" class="auth-form">
+                        <h2 class="auth-title">Welcome Back</h2>
+                        <p class="auth-subtitle">Continue your green journey today</p>
+                        
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <div class="input-icon-wrapper">
+                                <i data-lucide="mail"></i>
+                                <input type="email" id="login-email" required placeholder="name@example.com">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="input-icon-wrapper">
+                                <i data-lucide="lock"></i>
+                                <input type="password" id="login-password" required placeholder="••••••••">
+                            </div>
+                        </div>
+                        
+                        <div id="login-error-msg" class="error-message hidden"></div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form id="signup-form" class="auth-form hidden">
+                        <h2 class="auth-title">Start Tracking</h2>
+                        <p class="auth-subtitle">Join thousands reducing their carbon footprint</p>
+                        
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <div class="input-icon-wrapper">
+                                <i data-lucide="user"></i>
+                                <input type="text" id="signup-name" required placeholder="John Doe">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-email">Email Address</label>
+                            <div class="input-icon-wrapper">
+                                <i data-lucide="mail"></i>
+                                <input type="email" id="signup-email" required placeholder="name@example.com">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <div class="input-icon-wrapper">
+                                <i data-lucide="lock"></i>
+                                <input type="password" id="signup-password" required minlength="6" placeholder="At least 6 characters">
+                            </div>
+                        </div>
+                        
+                        <div id="signup-error-msg" class="error-message hidden"></div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    </form>
+                </div>
+            </section>
+
+
+            <!-- 3. QUESTIONNAIRE SECTION -->
+            <section id="quiz-section" class="content-section hidden">
+                <div class="quiz-container">
+                    
+                    <!-- Progress Sidebar (Horizontal on Mobile) -->
+                    <div class="quiz-progress-sidebar">
+                        <div class="progress-bar-outer">
+                            <div id="quiz-progress-indicator" class="progress-bar-inner" style="width: 16.6%;"></div>
+                        </div>
+                        <ul class="progress-steps-list">
+                            <li class="step-item active" data-step="1">
+                                <span class="step-num">1</span>
+                                <span class="step-label">Basic</span>
+                            </li>
+                            <li class="step-item" data-step="2">
+                                <span class="step-num">2</span>
+                                <span class="step-label">Transport</span>
+                            </li>
+                            <li class="step-item" data-step="3">
+                                <span class="step-num">3</span>
+                                <span class="step-label">Food</span>
+                            </li>
+                            <li class="step-item" data-step="4">
+                                <span class="step-num">4</span>
+                                <span class="step-label">Energy</span>
+                            </li>
+                            <li class="step-item" data-step="5">
+                                <span class="step-num">5</span>
+                                <span class="step-label">Waste</span>
+                            </li>
+                            <li class="step-item" data-step="6">
+                                <span class="step-num">6</span>
+                                <span class="step-label">Routine</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Quiz Content Card -->
+                    <div class="quiz-card">
+                        <div class="quiz-header">
+                            <h2 id="quiz-category-title">Basic Information</h2>
+                            <p id="quiz-category-desc">Tell us a bit about yourself to set a baseline.</p>
+                        </div>
+                        
+                        <form id="quiz-form">
+                            <!-- STEP 1: BASIC INFO -->
+                            <div class="quiz-step-pane active" data-pane="1">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="q-name">Your Nickname / Name</label>
+                                        <input type="text" id="q-name" required placeholder="E.g., Leafy Lover">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="q-age">Age</label>
+                                        <input type="number" id="q-age" min="1" max="120" required placeholder="E.g., 28">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="q-city">City</label>
+                                        <input type="text" id="q-city" required placeholder="E.g., San Francisco">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="q-citytype">City Type</label>
+                                        <select id="q-citytype" required>
+                                            <option value="">Select City Type...</option>
+                                            <option value="urban">Urban (Metropolitan / High Density)</option>
+                                            <option value="suburban">Suburban (Medium Density)</option>
+                                            <option value="rural">Rural (Low Density / Countryside)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="q-household">Number of People in Household (to split shared bills)</label>
+                                        <input type="number" id="q-household" min="1" max="50" value="1" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 2: TRANSPORTATION -->
+                            <div class="quiz-step-pane" data-pane="2">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="q-trans-primary">Primary Transport Mode</label>
+                                        <select id="q-trans-primary" required>
+                                            <option value="">Select Primary Mode...</option>
+                                            <option value="diesel-car">Petrol / Diesel Car</option>
+                                            <option value="electric-car">Electric Vehicle (EV)</option>
+                                            <option value="motorbike">Motorbike / Scooter</option>
+                                            <option value="bus">Public Bus</option>
+                                            <option value="metro">Metro / Train</option>
+                                            <option value="walk">Walk / Bicycle</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="q-trans-secondary">Secondary Transport Mode</label>
+                                        <select id="q-trans-secondary" required>
+                                            <option value="">Select Secondary Mode...</option>
+                                            <option value="none">None (Only Primary)</option>
+                                            <option value="diesel-car">Petrol / Diesel Car</option>
+                                            <option value="electric-car">Electric Vehicle (EV)</option>
+                                            <option value="motorbike">Motorbike / Scooter</option>
+                                            <option value="bus">Public Bus</option>
+                                            <option value="metro">Metro / Train</option>
+                                            <option value="walk">Walk / Bicycle</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="q-trans-commute">Average Daily Commute (total round-trip in km)</label>
+                                        <div class="input-range-container">
+                                            <input type="range" id="q-trans-commute" min="0" max="150" value="15" step="1">
+                                            <span class="range-val" id="q-trans-commute-val">15 km</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 3: FOOD -->
+                            <div class="quiz-step-pane" data-pane="3">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="q-food-diet">Dietary Preference</label>
+                                        <select id="q-food-diet" required>
+                                            <option value="">Select Diet...</option>
+                                            <option value="vegan">Vegan (Plant-based only)</option>
+                                            <option value="vegetarian">Vegetarian (No meat/fish, includes dairy)</option>
+                                            <option value="eggitarian">Eggitarian (Vegetarian + eggs)</option>
+                                            <option value="pescatarian">Pescatarian (Vegetarian + seafood)</option>
+                                            <option value="balanced">Balanced / Average Meat eater</option>
+                                            <option value="meat-heavy">Meat Lover (High meat consumption)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="q-food-delivery">Online Food Ordering Frequency</label>
+                                        <select id="q-food-delivery" required>
+                                            <option value="">Select Frequency...</option>
+                                            <option value="daily">Daily / Multiple times a day</option>
+                                            <option value="half-week">3-4 times a week</option>
+                                            <option value="weekly">1-2 times a week</option>
+                                            <option value="rarely">Rarely or Never</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 4: HOME ENERGY -->
+                            <div class="quiz-step-pane" data-pane="4">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="q-energy-bill">Approx. Monthly Electricity Bill (in USD/$ equivalent)</label>
+                                        <input type="number" id="q-energy-bill" min="0" required placeholder="E.g., 80">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="q-energy-ac">Air Conditioner (AC) Usage Daily</label>
+                                        <select id="q-energy-ac" required>
+                                            <option value="">Select AC Usage...</option>
+                                            <option value="none">No AC / Never use it</option>
+                                            <option value="low">1 - 3 hours per day</option>
+                                            <option value="medium">4 - 8 hours per day</option>
+                                            <option value="high">More than 8 hours per day</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="q-energy-fan">Fan Usage Daily (Ceiling/Table fans)</label>
+                                        <select id="q-energy-fan" required>
+                                            <option value="">Select Fan Usage...</option>
+                                            <option value="none">Never / Rarely</option>
+                                            <option value="low">1 - 4 hours per day</option>
+                                            <option value="medium">5 - 12 hours per day</option>
+                                            <option value="high">More than 12 hours per day</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 5: WASTE -->
+                            <div class="quiz-step-pane" data-pane="5">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="q-waste-segregate">Waste Segregation Habits</label>
+                                        <select id="q-waste-segregate" required>
+                                            <option value="">Select Waste Segregation...</option>
+                                            <option value="good">Good (Always separate wet, dry, & compost)</option>
+                                            <option value="partial">Partial (Separate paper/plastic only occasionally)</option>
+                                            <option value="none">None (Throw everything in a single dustbin)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="q-waste-recycle">Recycling Habit</label>
+                                        <select id="q-waste-recycle" required>
+                                            <option value="">Select Recycling...</option>
+                                            <option value="good">Good (Recycle all possible glass, plastic, paper)</option>
+                                            <option value="partial">Partial (Only recycle newspapers/large plastics)</option>
+                                            <option value="none">None (Do not recycle actively)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="q-waste-plastic">Single-use Plastic Usage</label>
+                                        <select id="q-waste-plastic" required>
+                                            <option value="">Select Plastic Usage...</option>
+                                            <option value="none">None (Use cloth bags, metal bottles, zero plastic)</option>
+                                            <option value="low">Low (Avoid plastic bags/bottles mostly)</option>
+                                            <option value="mid">Medium (Occasionally buy bottled water, plastic wraps)</option>
+                                            <option value="high">High (Rely heavily on disposable plastic items)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 6: DAILY ROUTINE -->
+                            <div class="quiz-step-pane" data-pane="6">
+                                <div class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="q-routine-work">Primary Work / Daily Setting</label>
+                                        <select id="q-routine-work" required>
+                                            <option value="">Select setting...</option>
+                                            <option value="remote">Work from Home (Full Remote)</option>
+                                            <option value="office">Commuting to Office (On-site)</option>
+                                            <option value="hybrid">Hybrid (Some remote days, some office days)</option>
+                                            <option value="student">Student / Homemaker / Retired</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="quiz-error-msg" class="quiz-error-message hidden">
+                                Please fill out all required fields or click 'Skip' to proceed.
+                            </div>
+
+                            <!-- Form Navigation Controls -->
+                            <div class="quiz-controls">
+                                <button type="button" class="btn btn-outline" id="quiz-prev-btn" style="visibility: hidden;">
+                                    <i data-lucide="arrow-left"></i> Back
+                                </button>
+                                
+                                <div class="right-controls">
+                                    <button type="button" class="btn btn-text" id="quiz-skip-btn">
+                                        Skip Section <i data-lucide="chevrons-right"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="quiz-next-btn">
+                                        Next <i data-lucide="arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 4. DASHBOARD SECTION -->
+            <section id="dashboard-section" class="content-section hidden">
+                <!-- Welcome Banner -->
+                <div class="dashboard-header-block">
+                    <div class="welcome-text">
+                        <h1>Hello, <span id="dash-username">Eco Explorer</span>!</h1>
+                        <p>Here is your personalized carbon emissions analysis. Let's make the planet greener together.</p>
+                    </div>
+                    <div class="date-badge">
+                        <i data-lucide="calendar"></i>
+                        <span id="dash-date">June 20, 2026</span>
+                    </div>
+                </div>
+
+                <!-- Footprint Summary Cards Grid -->
+                <div class="metrics-grid">
+                    <div class="card metric-card main-footprint">
+                        <div class="metric-icon">
+                            <i data-lucide="flame"></i>
+                        </div>
+                        <div class="metric-data">
+                            <h3>Your Total Footprint</h3>
+                            <div class="metric-value-container">
+                                <span class="metric-value" id="dash-footprint-value">0.00</span>
+                                <span class="metric-unit">Metric Tons CO<sub>2</sub>e / Yr</span>
+                            </div>
+                            <div class="metric-badge" id="dash-status-badge">Moderate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card metric-card compare-card">
+                        <div class="metric-icon">
+                            <i data-lucide="globe"></i>
+                        </div>
+                        <div class="metric-data">
+                            <h3>Comparison to Target</h3>
+                            <div class="comparison-status">
+                                <span id="dash-compare-text">Checking baseline...</span>
+                                <div class="comparison-percentage" id="dash-compare-percentage">0%</div>
+                            </div>
+                            <p class="comparison-sub">The global climate target to limit warming to 1.5°C is <strong style="color:var(--primary-dark)">2.0 tons</strong> per year per person.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graphs Grid -->
+                <div class="dashboard-charts-grid">
+                    <!-- Category Breakdown Doughnut -->
+                    <div class="card chart-card">
+                        <div class="chart-card-header">
+                            <h3>Category Breakdown</h3>
+                            <p>Where your emissions come from</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- National Comparison Bar -->
+                    <div class="card chart-card">
+                        <div class="chart-card-header">
+                            <h3>How You Compare</h3>
+                            <p>Your footprint vs national and target baselines</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations / Insights Section -->
+                <div class="card recommendations-card">
+                    <div class="recs-header">
+                        <div class="recs-title">
+                            <i data-lucide="sparkles"></i>
+                            <div>
+                                <h3>Personalized Eco Action Plan</h3>
+                                <p>Complete these simple actions to immediately offset or reduce your carbon emissions.</p>
+                            </div>
+                        </div>
+                        <div class="recs-completion-badge">
+                            Potential Savings: <span id="recs-potential-saving">0.0</span> kg CO<sub>2</sub>e/Yr
+                        </div>
+                    </div>
+                    
+                    <div class="recs-list" id="recommendations-list">
+                        <!-- Filled dynamically based on calculations -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <!-- App Footer -->
+        <footer class="app-footer">
+            <p>&copy; 2026 TerraTrack Hub. Built with care for a cleaner tomorrow.</p>
+        </footer>
+    </div>
+
+    <!-- 5. EDIT PROFILE & QUIZ MODAL -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i data-lucide="settings"></i> Profile Settings & Quiz Answers</h2>
+                <button class="modal-close-btn" id="modal-close-x">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="modal-settings-form">
+                <div class="modal-tabs">
+                    <button type="button" class="modal-tab-btn active" data-target="m-tab-profile">Basic & Account</button>
+                    <button type="button" class="modal-tab-btn" data-target="m-tab-transport">Transport & Work</button>
+                    <button type="button" class="modal-tab-btn" data-target="m-tab-lifestyle">Food, Energy & Waste</button>
+                </div>
+                
+                <div class="modal-body-scroll">
+                    <!-- Tab: Profile -->
+                    <div class="modal-tab-pane active" id="m-tab-profile">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="m-name">Account Name</label>
+                                <input type="text" id="m-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="m-email">Email (Cannot be changed)</label>
+                                <input type="email" id="m-email" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="m-age">Age</label>
+                                <input type="number" id="m-age" min="1" max="120">
+                            </div>
+                            <div class="form-group">
+                                <label for="m-city">City</label>
+                                <input type="text" id="m-city">
+                            </div>
+                            <div class="form-group">
+                                <label for="m-citytype">City Type</label>
+                                <select id="m-citytype">
+                                    <option value="">Select City Type...</option>
+                                    <option value="urban">Urban (Metropolitan)</option>
+                                    <option value="suburban">Suburban</option>
+                                    <option value="rural">Rural</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="m-household">Household Size</label>
+                                <input type="number" id="m-household" min="1" max="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Transport & Work -->
+                    <div class="modal-tab-pane" id="m-tab-transport">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="m-trans-primary">Primary Transport Mode</label>
+                                <select id="m-trans-primary">
+                                    <option value="">Select Primary Mode...</option>
+                                    <option value="diesel-car">Petrol / Diesel Car</option>
+                                    <option value="electric-car">Electric Vehicle (EV)</option>
+                                    <option value="motorbike">Motorbike / Scooter</option>
+                                    <option value="bus">Public Bus</option>
+                                    <option value="metro">Metro / Train</option>
+                                    <option value="walk">Walk / Bicycle</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-trans-secondary">Secondary Transport Mode</label>
+                                <select id="m-trans-secondary">
+                                    <option value="">Select Secondary Mode...</option>
+                                    <option value="none">None (Only Primary)</option>
+                                    <option value="diesel-car">Petrol / Diesel Car</option>
+                                    <option value="electric-car">Electric Vehicle (EV)</option>
+                                    <option value="motorbike">Motorbike / Scooter</option>
+                                    <option value="bus">Public Bus</option>
+                                    <option value="metro">Metro / Train</option>
+                                    <option value="walk">Walk / Bicycle</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-trans-commute">Daily Commute (km)</label>
+                                <div class="input-range-container">
+                                    <input type="range" id="m-trans-commute" min="0" max="150" step="1">
+                                    <span class="range-val" id="m-trans-commute-val">15 km</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-routine-work">Work setting</label>
+                                <select id="m-routine-work">
+                                    <option value="">Select setting...</option>
+                                    <option value="remote">Work from Home (Remote)</option>
+                                    <option value="office">Commuting to Office</option>
+                                    <option value="hybrid">Hybrid</option>
+                                    <option value="student">Student / Homemaker / Retired</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Lifestyle -->
+                    <div class="modal-tab-pane" id="m-tab-lifestyle">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="m-food-diet">Dietary Preference</label>
+                                <select id="m-food-diet">
+                                    <option value="">Select Diet...</option>
+                                    <option value="vegan">Vegan</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="eggitarian">Eggitarian</option>
+                                    <option value="pescatarian">Pescatarian</option>
+                                    <option value="balanced">Balanced / Average Meat</option>
+                                    <option value="meat-heavy">Meat Lover</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-food-delivery">Online Food Ordering</label>
+                                <select id="m-food-delivery">
+                                    <option value="">Select Frequency...</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="half-week">3-4 times a week</option>
+                                    <option value="weekly">1-2 times a week</option>
+                                    <option value="rarely">Rarely or Never</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-energy-bill">Monthly Electricity Bill ($)</label>
+                                <input type="number" id="m-energy-bill" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-energy-ac">AC Usage Daily</label>
+                                <select id="m-energy-ac">
+                                    <option value="">Select AC Usage...</option>
+                                    <option value="none">No AC</option>
+                                    <option value="low">1 - 3 hours</option>
+                                    <option value="medium">4 - 8 hours</option>
+                                    <option value="high">8+ hours</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-energy-fan">Fan Usage Daily</label>
+                                <select id="m-energy-fan">
+                                    <option value="">Select Fan Usage...</option>
+                                    <option value="none">Never / Rarely</option>
+                                    <option value="low">1 - 4 hours</option>
+                                    <option value="medium">5 - 12 hours</option>
+                                    <option value="high">12+ hours</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="m-waste-segregate">Waste Segregation</label>
+                                <select id="m-waste-segregate">
+                                    <option value="">Select Segregation...</option>
+                                    <option value="good">Good</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="m-waste-recycle">Recycling Habit</label>
+                                <select id="m-waste-recycle">
+                                    <option value="">Select Recycling...</option>
+                                    <option value="good">Good</option>
+                                    <option value="partial">Partial</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="m-waste-plastic">Single-use Plastic</label>
+                                <select id="m-waste-plastic">
+                                    <option value="">Select Plastic...</option>
+                                    <option value="none">None</option>
+                                    <option value="low">Low</option>
+                                    <option value="mid">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="modal-cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modal-save-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main JavaScript Code -->
+    <script src="app.js"></script>
+</body>
+</html>
