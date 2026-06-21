@@ -1243,12 +1243,6 @@ function openSettingsModal() {
     
     document.getElementById("m-routine-work").value = r.routineWork;
     
-    // Load local storage custom API key in field (keeps key private in user browser)
-    document.getElementById("m-ai-key").value = localStorage.getItem("terratrack_custom_ai_key") || "";
-    
-    // Load local storage custom model name
-    document.getElementById("m-ai-model").value = localStorage.getItem("terratrack_custom_ai_model") || "";
-    
     const modal = document.getElementById("settings-modal");
     modal.classList.remove("hidden");
     
@@ -1299,22 +1293,6 @@ async function saveSettings(e) {
         
         routineWork: document.getElementById("m-routine-work").value || "hybrid"
     };
-    
-    // Save Custom API Key locally in browser
-    const customKeyVal = document.getElementById("m-ai-key").value.trim();
-    if (customKeyVal === "") {
-        localStorage.removeItem("terratrack_custom_ai_key");
-    } else {
-        localStorage.setItem("terratrack_custom_ai_key", customKeyVal);
-    }
-    
-    // Save Custom Model Name locally in browser
-    const customModelVal = document.getElementById("m-ai-model").value.trim();
-    if (customModelVal === "") {
-        localStorage.removeItem("terratrack_custom_ai_model");
-    } else {
-        localStorage.setItem("terratrack_custom_ai_model", customModelVal);
-    }
     
     try {
         await callAPI('/api/profile', 'POST', { responses: updatedResponses, name: updatedName });
