@@ -59,10 +59,10 @@
                     </div>
                     <!-- Authenticated View -->
                     <div id="auth-header-btn" class="auth-header-btn hidden">
-                        <div class="profile-pill" id="profile-dropdown-trigger">
+                        <div class="profile-pill" id="profile-dropdown-trigger" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="User profile menu">
                             <div class="avatar" id="user-avatar-initial">U</div>
                             <span class="username" id="header-username">User</span>
-                            <i data-lucide="chevron-down" class="chevron"></i>
+                            <i data-lucide="chevron-down" class="chevron" aria-hidden="true"></i>
                         </div>
                         <div class="profile-dropdown" id="profile-dropdown-menu">
                             <div class="dropdown-header">
@@ -435,7 +435,7 @@
                     <div class="toggle-switch-wrapper">
                         <span class="toggle-label active" id="toggle-yearly-label">Yearly Analysis</span>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="analysis-view-toggle">
+                            <input type="checkbox" id="analysis-view-toggle" aria-label="Toggle between yearly and monthly analysis">
                             <span class="toggle-slider"></span>
                         </label>
                         <span class="toggle-label" id="toggle-monthly-label">Monthly Analysis</span>
@@ -552,9 +552,9 @@
                                 </div>
                             </div>
                             <form id="chat-input-form" class="chat-input-form">
-                                <input type="text" id="chat-user-message" required placeholder="Type a message... (e.g. How to compost?)" maxlength="300">
-                                <button type="submit" class="chat-send-btn" id="chat-send-btn">
-                                    <i data-lucide="send"></i>
+                                <input type="text" id="chat-user-message" required placeholder="Type a message... (e.g. How to compost?)" maxlength="300" aria-label="Eco chat message input">
+                                <button type="submit" class="chat-send-btn" id="chat-send-btn" aria-label="Send message">
+                                    <i data-lucide="send" aria-hidden="true"></i>
                                 </button>
                             </form>
                         </div>
@@ -595,8 +595,8 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h2><i data-lucide="settings"></i> Profile Settings & Quiz Answers</h2>
-                <button class="modal-close-btn" id="modal-close-x">
-                    <i data-lucide="x"></i>
+                <button class="modal-close-btn" id="modal-close-x" aria-label="Close settings modal">
+                    <i data-lucide="x" aria-hidden="true"></i>
                 </button>
             </div>
             

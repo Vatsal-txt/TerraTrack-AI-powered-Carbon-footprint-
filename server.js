@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
@@ -25,6 +26,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'terratrack_secure_jwt_secret_key_1
 // ==========================================================================
 // SECURITY CONFIGURATIONS & MIDDLEWARES
 // ==========================================================================
+app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false
+}));
 app.use(cors());
 
 // Limit JSON payload size to 10kb to prevent memory exhaustion attacks
@@ -424,9 +429,13 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-    console.log(`=========================================`);
-    console.log(` TerraTrack Server running on port ${PORT} `);
-    console.log(` Health: OK | Security Shields: ACTIVE `);
-    console.log(`=========================================`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`=========================================`);
+        console.log(` TerraTrack Server running on port ${PORT} `);
+        console.log(` Health: OK | Security Shields: ACTIVE `);
+        console.log(`=========================================`);
+    });
+}
+
+module.exports = app;
