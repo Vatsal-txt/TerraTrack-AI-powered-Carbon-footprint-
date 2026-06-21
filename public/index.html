@@ -482,18 +482,18 @@
                             <p>Where your emissions come from</p>
                         </div>
                         <div class="chart-wrapper">
-                            <canvas id="categoryChart"></canvas>
+                            <canvas id="categoryChart" role="img" aria-label="Doughnut chart showing carbon footprint category breakdown"></canvas>
                         </div>
                     </div>
                     
-                    <!-- National Comparison Bar -->
+                    <!-- How You Compare Bar -->
                     <div class="card chart-card">
                         <div class="chart-card-header">
                             <h3>How You Compare</h3>
                             <p>Your footprint vs regional averages and target limit</p>
                         </div>
                         <div class="chart-wrapper">
-                            <canvas id="comparisonChart"></canvas>
+                            <canvas id="comparisonChart" role="img" aria-label="Bar chart comparing your carbon footprint with target limit and regional average"></canvas>
                         </div>
                     </div>
                 </div>
@@ -601,10 +601,10 @@
             </div>
             
             <form id="modal-settings-form">
-                <div class="modal-tabs">
-                    <button type="button" class="modal-tab-btn active" data-target="m-tab-profile">Basic & Account</button>
-                    <button type="button" class="modal-tab-btn" data-target="m-tab-transport">Transport & Work</button>
-                    <button type="button" class="modal-tab-btn" data-target="m-tab-lifestyle">Food, Energy & Waste</button>
+                <div class="modal-tabs" role="tablist">
+                    <button type="button" class="modal-tab-btn active" data-target="m-tab-profile" role="tab" aria-selected="true" aria-controls="m-tab-profile">Basic & Account</button>
+                    <button type="button" class="modal-tab-btn" data-target="m-tab-transport" role="tab" aria-selected="false" aria-controls="m-tab-transport">Transport & Work</button>
+                    <button type="button" class="modal-tab-btn" data-target="m-tab-lifestyle" role="tab" aria-selected="false" aria-controls="m-tab-lifestyle">Food, Energy & Waste</button>
                 </div>
                 
                 <div class="modal-body-scroll">

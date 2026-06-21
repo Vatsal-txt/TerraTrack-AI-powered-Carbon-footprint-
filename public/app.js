@@ -295,8 +295,12 @@ function initApp() {
     const modalTabButtons = document.querySelectorAll(".modal-tab-btn");
     modalTabButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-            modalTabButtons.forEach(b => b.classList.remove("active"));
+            modalTabButtons.forEach(b => {
+                b.classList.remove("active");
+                b.setAttribute("aria-selected", "false");
+            });
             btn.classList.add("active");
+            btn.setAttribute("aria-selected", "true");
             
             const targetPaneId = btn.getAttribute("data-target");
             const modalPanes = document.querySelectorAll(".modal-tab-pane");
